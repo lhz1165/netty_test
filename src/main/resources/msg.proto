@@ -1,0 +1,23 @@
+syntax = "proto2";
+ package com.test.protobuf;
+ option optimize_for = SPEED;
+ option java_package = "com.lhz";
+ option java_outer_classname = "DataInfo";
+
+ message Student{
+    required string name = 1;
+    optional int32 age = 2;
+    optional string address = 3;
+ }
+
+message IPs{
+  repeated string ip = 1;
+  optional string source=2;
+}
+message IPAck{
+  message ipRes{
+    optional string ip=1;
+    optional string mac=2;
+   }
+  repeated ipRes res =1;
+}
