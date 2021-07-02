@@ -37,7 +37,6 @@ public class HttpServer {
 								protected void channelRead0(ChannelHandlerContext ctx, HttpObject msg) throws Exception {
 									System.out.println("====================rec====================");
 									if (msg instanceof HttpRequest) {
-										HttpRequest request = (HttpRequest) msg;
 										ByteBuf byteBuf = Unpooled.copiedBuffer("{\"msg\":\"hello world\"}", CharsetUtil.UTF_8);
 										DefaultFullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, byteBuf);
 										response.headers().set(HttpHeaderNames.CONTENT_TYPE, "application/json");
