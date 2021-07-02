@@ -12,10 +12,10 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 public class Client {
 	public static void main(String[] args) {
 		NioEventLoopGroup eventLoopGroup = new NioEventLoopGroup();
-		Bootstrap bootstrap = new Bootstrap();
-		bootstrap.group(eventLoopGroup)
-				.channel(NioSocketChannel.class)
-				.handler(new SimpleChannelInboundHandler<>() {
-				})
+//		Bootstrap bootstrap = new Bootstrap();
+//		bootstrap.group(eventLoopGroup)
+//				.channel(NioSocketChannel.class)
+//				.handler(new SimpleChannelInboundHandler<>() {
+//				})
 	}
 }
