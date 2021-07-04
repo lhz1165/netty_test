@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    let socket = new WebSocket("ws://localhost:8899/ws");
+    socket.onmessage = function (event) {
+        let respText = document.getElementById("respM");
+        respText.value=respText.value+"\n"+event.data;
+    };
+
+    socket.open = function (event) {
+        let respText = document.getElementById("respM");
+        respText.value="连接开启"
+    };
+
+
+    var clear = function (){
+        let respM = document.getElementById("respM");
+        respM.value="";
+    }
+
+    var send = function (message){
+        if (socket.readyState == WebSocket.OPEN){
+            console.log(document.getElementById("cs").value)
+            socket.send(message);
+        }else {
+            alert("no line")
+        }
+    }
+
+
+</script>
+<form onsubmit="return false;">
+    <textarea id="cs" name="messagec " id="sendM" cols="100" rows="25"></textarea>
+    <input type="button" value="发送消息" onclick="send(document.getElementById('cs').value)">
+    <h3>服务端输出:</h3>
+    <textarea name="messagec " id="respM" cols="100" rows="25"></textarea>
+    <input type="button" value="清空内容" onclick="clear()">
+
+</form>
+</body>
+</html>
