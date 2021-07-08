@@ -4,10 +4,13 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
+import io.netty.channel.local.LocalEventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.*;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 import io.netty.util.CharsetUtil;
 
 /**
@@ -28,6 +31,7 @@ public class HttpServer {
 						@Override
 						protected void initChannel(SocketChannel socketChannel) throws Exception {
 							ChannelPipeline pipeline = socketChannel.pipeline();
+							pipeline.addLast(new LoggingHandler(LogLevel.INFO));
 							pipeline.addLast("httpServerCodec", new HttpServerCodec());
 
 							//入栈处理器

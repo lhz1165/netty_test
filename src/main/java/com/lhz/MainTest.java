@@ -11,6 +11,7 @@ import java.util.List;
  * @create 2021/6/22
  */
 public class MainTest {
+
 	public static void main(String[] args) throws InvalidProtocolBufferException {
 		byte[] rse = send(new ArrayList<String>(Arrays.asList("1xxxx", "2xxxx", "33xxx")));
 		DataInfo.IPAck ipAck = DataInfo.IPAck.parseFrom(rse);
@@ -35,6 +36,7 @@ public class MainTest {
 		return getRes(ipsParam);
 
 	}
+
 	public static byte[] getRes(DataInfo.IPs ips) throws InvalidProtocolBufferException {
 		byte[] ipsBattery = ips.toByteArray();
 		DataInfo.IPs iPsParam = DataInfo.IPs.parseFrom(ipsBattery);
@@ -54,6 +56,7 @@ public class MainTest {
 			DataInfo.IPAck.ipRes res = resBuilder.build();
 			ackB.addRes(res);
 		}
+
 		DataInfo.IPAck ipAck = ackB.build();
 
 

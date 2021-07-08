@@ -33,7 +33,6 @@ public class WsServer {
 					.channel(NioServerSocketChannel.class)
 					.childHandler(new ChannelInitializer<SocketChannel>() {
 						public  ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-
 						@Override
 						protected void initChannel(SocketChannel ch) throws Exception {
 							ChannelPipeline pipeline = ch.pipeline();
@@ -42,16 +41,15 @@ public class WsServer {
 							pipeline.addLast(new HttpObjectAggregator(8192));
 							pipeline.addLast(new WebSocketServerProtocolHandler("/ws"));
 							pipeline.addLast(new SimpleChannelInboundHandler<TextWebSocketFrame>() {
-
 								@Override
 								protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {
 									System.out.println("收到消息: "+msg.text());
 									//发送给客户端
 									for (Channel channel : channels) {
 										if (channel.id().asShortText().equals(ctx.channel().id().asShortText())) {
-											channel.writeAndFlush(new TextWebSocketFrame("时间："+ LocalDateTime.now()+" 我自己: " +msg.text()));
+											channel.writeAndFlush(new TextWebSocketFrame("时间："+ LocalDateTime.now()+" 我自己:  " +msg.text()));
 										}else {
-											channel.writeAndFlush(new TextWebSocketFrame("时间："+ LocalDateTime.now()+ctx.channel().id().asShortText()+": "+ LocalDateTime.now()+msg.text()));
+											channel.writeAndFlush(new TextWebSocketFrame("时间："+ LocalDateTime.now()+ctx.channel().id().asShortText()+":  "+msg.text()));
 
 										}
 									}
@@ -68,7 +66,11 @@ public class WsServer {
 
 								@Override
 								public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
-									System.out.println(ctx.channel().id().asLongText()+"断开连接......");
+									for (Channel channel : channels) {
+										channel.writeAndFlush(new TextWebSocketFrame(ctx.channel().id().asLongText()+" 断开连接......"));
+
+									}
+									System.out.println(ctx.channel().id().asLongText()+" 断开连接......");
 								}
 
 								@Override
