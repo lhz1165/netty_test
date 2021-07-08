@@ -18,11 +18,6 @@
     };
 
 
-    var clear = function (){
-        let respM = document.getElementById("respM");
-        respM.value="";
-    }
-
     var send = function (message){
         if (socket.readyState == WebSocket.OPEN){
             console.log(document.getElementById("cs").value)
@@ -32,14 +27,21 @@
         }
     }
 
+    function clearRest()
+    {
+        console.log("clear")
+        document.getElementById("respM").value="";
+    }
+
 
 </script>
 <form onsubmit="return false;">
-    <textarea id="cs" name="messagec " id="sendM" cols="100" rows="25"></textarea>
-    <input type="button" value="发送消息" onclick="send(document.getElementById('cs').value)">
+    <textarea id="cs" name="messagec "  cols="100" rows="25"></textarea>
+    <input id="btn2" type="button" value="发送消息" onclick="send(document.getElementById('cs').value)">
     <h3>服务端输出:</h3>
-    <textarea name="messagec " id="respM" cols="100" rows="25"></textarea>
-    <input type="button" value="清空内容" onclick="clear()">
+    <textarea id="respM" name="messagec "  cols="100" rows="25"></textarea>
+    <input id="btn1" type="button" value="清空内容" onclick="clearRest()">
+
 
 </form>
 </body>

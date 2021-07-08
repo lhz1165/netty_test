@@ -6,10 +6,6 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.ByteToMessageCodec;
-import io.netty.handler.codec.ByteToMessageDecoder;
-
-import java.util.List;
 
 
 /**
@@ -45,7 +41,6 @@ public class TimeServer {
                                         @Override
                                         public void channelActive(final ChannelHandlerContext ctx) { // (1)
                                             ChannelFuture f = ctx.writeAndFlush(new UnixTime());
-
                                             f.addListener(new ChannelFutureListener() {
                                                 @Override
                                                 public void operationComplete(ChannelFuture future) {
