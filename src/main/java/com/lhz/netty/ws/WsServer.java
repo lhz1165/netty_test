@@ -51,7 +51,7 @@ public class WsServer {
 										if (channel.id().asShortText().equals(ctx.channel().id().asShortText())) {
 											channel.writeAndFlush(new TextWebSocketFrame("时间："+ LocalDateTime.now()+" 我自己: " +msg.text()));
 										}else {
-											channel.writeAndFlush(new TextWebSocketFrame("时间："+ LocalDateTime.now()+ctx.channel().id().asShortText()+": "+ LocalDateTime.now()+msg.text()));
+											channel.writeAndFlush(new TextWebSocketFrame("时间："+ LocalDateTime.now()+ctx.channel().id().asShortText()+": "+msg.text()));
 
 										}
 									}
