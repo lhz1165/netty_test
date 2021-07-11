@@ -1,8 +1,10 @@
 package com.lhz.netty.chat_room.message;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @ToString(callSuper = true)
 public abstract class AbstractResponseMessage extends Message {
@@ -16,4 +18,6 @@ public abstract class AbstractResponseMessage extends Message {
         this.success = success;
         this.reason = reason;
     }
+
+
 }

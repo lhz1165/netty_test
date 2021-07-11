@@ -15,4 +15,5 @@ public class LoginResponseMessage extends AbstractResponseMessage {
     public int getMessageType() {
         return LoginResponseMessage;
     }
+
 }
