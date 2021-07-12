@@ -18,6 +18,8 @@ public interface GroupSession {
      */
     Group createGroup(String name, Set<String> members);
 
+    Group createGroup(String name);
+
     /**
      * 加入聊天组
      * @param name 组名
@@ -54,4 +56,6 @@ public interface GroupSession {
      * @return 成员 channel 集合
      */
     List<Channel> getMembersChannel(String name);
+
+    Group getGroup(String name);
 }

@@ -1,11 +1,13 @@
 package com.lhz.netty.chat_room.protocol;
 
+import io.netty.channel.ChannelHandler;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 
 /**
  * @author lhzlhz
  * @create 2021/7/8
  */
+
 public class ProtocolFrameDecoder extends LengthFieldBasedFrameDecoder {
 	public ProtocolFrameDecoder() {
 		//最大长度 长度起始位置，长度的偏移量，长度int4字节，冗余几个字节，丢弃掉前面几个字节

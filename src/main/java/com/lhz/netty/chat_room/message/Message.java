@@ -41,6 +41,10 @@ public abstract class Message implements Serializable {
 	public static final int GroupMembersResponseMessage = 13;
 	public static final int PingMessage = 14;
 	public static final int PongMessage = 15;
+	public static final int join = 16;
+	public static final int joinResp = 17;
+	public static final int acc = 18;
+	public static final int accResp = 19;
 	/**
 	 * 请求类型 byte 值
 	 */
@@ -69,6 +73,10 @@ public abstract class Message implements Serializable {
 		messageClasses.put(GroupMembersResponseMessage, GroupMembersResponseMessage.class);
 		messageClasses.put(RPC_MESSAGE_TYPE_REQUEST, RpcRequestMessage.class);
 		messageClasses.put(RPC_MESSAGE_TYPE_RESPONSE, RpcResponseMessage.class);
+		messageClasses.put(acc, JoinAccMsg.class);
+		messageClasses.put(accResp, JoinAccRespMsg.class);
+		messageClasses.put(join, JoinReqMessage.class);
+		messageClasses.put(joinResp, JoinRespMessage.class);
 	}
 
 }

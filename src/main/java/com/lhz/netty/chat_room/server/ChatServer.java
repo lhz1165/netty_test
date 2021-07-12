@@ -7,6 +7,7 @@ import com.lhz.netty.chat_room.message.LoginRequestMessage;
 import com.lhz.netty.chat_room.message.LoginResponseMessage;
 import com.lhz.netty.chat_room.protocol.MessageCodecSharable;
 import com.lhz.netty.chat_room.protocol.ProtocolFrameDecoder;
+import com.lhz.netty.chat_room.server.handler.*;
 import com.lhz.netty.chat_room.server.service.UserServiceFactory;
 import com.lhz.netty.chat_room.server.session.SessionFactory;
 import io.netty.bootstrap.ServerBootstrap;
@@ -25,7 +26,12 @@ public class ChatServer {
         NioEventLoopGroup boss = new NioEventLoopGroup();
         NioEventLoopGroup worker = new NioEventLoopGroup();
         LoggingHandler LOGGING_HANDLER = new LoggingHandler(LogLevel.INFO);
-
+        LoginRequestMessage2Handler loginRequestMessage2Handler = new LoginRequestMessage2Handler();
+        ChatRequestMessageHandler chatRequestMessageHandler = new ChatRequestMessageHandler();
+        GroupCreateRequestMessageHandler groupCreateRequest = new GroupCreateRequestMessageHandler();
+        MessageCodecSharable codec = new MessageCodecSharable();
+        GroupJoinMessageHandler joinMessageHandler = new GroupJoinMessageHandler();
+        JoinAccMsgHandler joinAccMsgHandler = new JoinAccMsgHandler();
         try {
             ServerBootstrap serverBootstrap = new ServerBootstrap();
             serverBootstrap.channel(NioServerSocketChannel.class);
@@ -46,21 +52,15 @@ public class ChatServer {
                                 log.debug("msg: {}", msg);
                                 SessionFactory.getSession().bind(ctx.channel(), username);
                                 ctx.writeAndFlush(new LoginResponseMessage(true, "登录成功"));
-                            }else {
+                            } else {
                                 ctx.writeAndFlush(new LoginResponseMessage(false, "登录失败"));
                             }
                         }
                     });
-                    pipeline.addLast(new SimpleChannelInboundHandler<ChatRequestMessage>() {
-                        @Override
-                        protected void channelRead0(ChannelHandlerContext ctx, ChatRequestMessage msg) throws Exception {
-                            String from = msg.getFrom();
-                            Channel toCtx = SessionFactory.getSession().getChannel(from);
-                            ChatResponseMessage message = new ChatResponseMessage(from, msg.getContent());
-                            message.setSuccess(true);
-                            toCtx.writeAndFlush(message);
-                        }
-                    });
+                    pipeline.addLast(chatRequestMessageHandler);
+                   // pipeline.addLast(groupCreateRequest);
+                    pipeline.addLast(joinMessageHandler);
+                    pipeline.addLast(joinAccMsgHandler);
                 }
             });
             Channel channel = serverBootstrap.bind(8899).sync().channel();

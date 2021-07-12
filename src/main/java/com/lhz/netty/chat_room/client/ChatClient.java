@@ -93,8 +93,7 @@ public class ChatClient {
                                             break;
                                         case "gcreate":
                                             Set<String> set = new HashSet<>(Arrays.asList(s[2].split(",")));
-                                            set.add(username); // 加入自己
-                                            ctx.writeAndFlush(new GroupCreateRequestMessage(s[1], set));
+                                            ctx.writeAndFlush(new JoinReqMessage(s[1],username, set));
                                             break;
                                         case "gmembers":
                                             ctx.writeAndFlush(new GroupMembersRequestMessage(s[1]));
@@ -139,6 +138,29 @@ public class ChatClient {
                         protected void channelRead0(ChannelHandlerContext ctx, ChatResponseMessage msg) throws Exception {
                             System.out.println("from :" + msg.getFrom());
                             System.out.println("said :" + msg.getContent());
+                        }
+                    });
+                    //回复
+                    pipeline.addLast(new SimpleChannelInboundHandler<JoinRespMessage>() {
+                        @Override
+                        protected void channelRead0(ChannelHandlerContext ctx, JoinRespMessage msg) throws Exception {
+                            System.out.println(msg.getReason());
+                            Scanner sc = new Scanner(System.in);
+                            String replay = sc.next();
+
+                            String groupName = msg.getGroupName();
+                            String name = msg.getName();
+                            JoinAccMsg joinAccMsg = new JoinAccMsg(name, groupName, replay);
+                            joinAccMsg.setCreator(msg.getCreator());
+                            ctx.writeAndFlush(joinAccMsg);
+                        }
+                    });
+                    //收到
+                    pipeline.addLast(new SimpleChannelInboundHandler<JoinAccRespMsg>() {
+
+                        @Override
+                        protected void channelRead0(ChannelHandlerContext ctx, JoinAccRespMsg msg) throws Exception {
+                            System.out.println(msg.getReason());
                         }
                     });
                 }
