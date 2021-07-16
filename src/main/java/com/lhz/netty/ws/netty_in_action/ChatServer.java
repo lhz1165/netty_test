@@ -50,7 +50,7 @@ public class ChatServer {
 
     public static void main(String[] args) throws Exception {
 
-        int port = Integer.parseInt("8899");
+        int port = Integer.parseInt("8080");
         final ChatServer endpoint = new ChatServer();
         ChannelFuture future = endpoint.start(new InetSocketAddress(port));
         Runtime.getRuntime().addShutdownHook(new Thread(endpoint::destroy));

@@ -6,7 +6,7 @@
 </head>
 <body>
 <script>
-    let socket = new WebSocket("ws://localhost:8899/ws");
+    let socket = new WebSocket("ws://localhost:8080/ws");
     socket.onmessage = function (event) {
         let respText = document.getElementById("respM");
         respText.value=respText.value+"\n"+event.data;

@@ -25,8 +25,7 @@ public class TextWebSocketFrameHandler
                                    Object evt) throws Exception {
         if (evt instanceof   WebSocketServerProtocolHandler.HandshakeComplete) {
             ctx.pipeline().remove(HttpRequestHandler.class);
-            group.writeAndFlush(new TextWebSocketFrame(
-                    "Client " + ctx.channel() + " joined"));
+            group.writeAndFlush(new TextWebSocketFrame("Client " + ctx.channel() + " joined"));
             group.add(ctx.channel());
         } else {
             super.userEventTriggered(ctx, evt);
