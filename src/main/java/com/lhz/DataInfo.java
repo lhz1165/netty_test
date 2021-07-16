@@ -4,6 +4,8 @@
 package com.lhz;
 
 public final class DataInfo {
+
+
   private DataInfo() {}
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistryLite registry) {

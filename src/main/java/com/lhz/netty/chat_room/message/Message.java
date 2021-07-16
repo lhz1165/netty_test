@@ -77,6 +77,8 @@ public abstract class Message implements Serializable {
 		messageClasses.put(accResp, JoinAccRespMsg.class);
 		messageClasses.put(join, JoinReqMessage.class);
 		messageClasses.put(joinResp, JoinRespMessage.class);
+		messageClasses.put(PingMessage, PingMessage.class);
+		messageClasses.put(PongMessage, PongMessage.class);
 	}
 
 }

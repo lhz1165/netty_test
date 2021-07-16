@@ -57,5 +57,8 @@ public interface GroupSession {
      */
     List<Channel> getMembersChannel(String name);
 
+    List<Channel> getMembersChannel(String name,String sendName);
+
+
     Group getGroup(String name);
 }

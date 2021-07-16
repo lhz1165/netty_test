@@ -30,7 +30,6 @@ public class JoinAccMsgHandler extends SimpleChannelInboundHandler<JoinAccMsg> {
             groupSession.getMembers(groupName).add(msg.getFrom());
             JoinAccRespMsg joinAccRespMsg = new JoinAccRespMsg();
             joinAccRespMsg.setSuccess(true);
-
             joinAccRespMsg.setReason("用户"+msg.getFrom()+"加入成功");
             channel.writeAndFlush(joinAccRespMsg);
         }else {

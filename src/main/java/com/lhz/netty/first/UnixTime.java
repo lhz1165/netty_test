@@ -2,6 +2,7 @@ package com.lhz.netty.first;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Scanner;
 
 /**
  * Created by: hz.lai
@@ -9,6 +10,7 @@ import java.util.Date;
  * Description:
  */
 public class UnixTime {
+
     private final long value;
 
     public UnixTime() {

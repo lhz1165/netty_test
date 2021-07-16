@@ -1,6 +1,8 @@
 package com.lhz.netty.chat_room.client;
 
 
+import com.lhz.netty.chat_room.client.handler.HeartbeatHandler;
+import com.lhz.netty.chat_room.client.handler.PongHandler;
 import com.lhz.netty.chat_room.message.*;
 import com.lhz.netty.chat_room.protocol.MessageCodecSharable;
 import com.lhz.netty.chat_room.protocol.ProtocolFrameDecoder;
@@ -33,7 +35,7 @@ public class ChatClient {
         MessageCodecSharable MESSAGE_CODEC = new MessageCodecSharable();
         CountDownLatch waitFor = new CountDownLatch(1);
         AtomicBoolean isSucc = new AtomicBoolean(false);
-        Scanner scanner = new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
         try {
             Bootstrap bootstrap = new Bootstrap();
             bootstrap.channel(NioSocketChannel.class);
@@ -45,11 +47,13 @@ public class ChatClient {
                     pipeline.addLast(new ProtocolFrameDecoder());
                     pipeline.addLast(LOGGING_HANDLER);
                     pipeline.addLast(MESSAGE_CODEC);
+                    pipeline.addLast(new IdleStateHandler(0, 0, 10));
+                    pipeline.addLast(new HeartbeatHandler());
+
                     pipeline.addLast(new ChannelInboundHandlerAdapter(){
                         @Override
                         public void channelActive(ChannelHandlerContext ctx) throws Exception {
                             new Thread(() -> {
-                                Scanner sc = new Scanner(System.in);
                                 System.out.println("输入用户名");
                                 String username = sc.next();
                                 System.out.println("输入用密码");
@@ -79,7 +83,7 @@ public class ChatClient {
                                     System.out.println("==================================");
                                     String command = null;
                                     try {
-                                        command = scanner.nextLine();
+                                        command = sc.nextLine();
                                     } catch (Exception e) {
                                         break;
                                     }
@@ -107,6 +111,8 @@ public class ChatClient {
                                         case "quit":
                                             ctx.channel().close();
                                             return;
+                                        default:
+                                            System.out.println("error command");
                                     }
                                 }
                             }).start();
@@ -145,8 +151,8 @@ public class ChatClient {
                         @Override
                         protected void channelRead0(ChannelHandlerContext ctx, JoinRespMessage msg) throws Exception {
                             System.out.println(msg.getReason());
-                            Scanner sc = new Scanner(System.in);
-                            String replay = sc.next();
+                            Scanner reset = new Scanner(System.in);
+                            String replay = reset.next();
 
                             String groupName = msg.getGroupName();
                             String name = msg.getName();
@@ -163,6 +169,14 @@ public class ChatClient {
                             System.out.println(msg.getReason());
                         }
                     });
+                    pipeline.addLast(new SimpleChannelInboundHandler<GroupChatResponseMessage>() {
+                        @Override
+                        protected void channelRead0(ChannelHandlerContext ctx, GroupChatResponseMessage msg) throws Exception {
+                            System.out.println("group  msg from "+msg.getFrom());
+                            System.out.println("content "+msg.getContent());
+                        }
+                    });
+                    pipeline.addLast(new PongHandler());
                 }
             });
 

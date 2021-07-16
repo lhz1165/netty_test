@@ -60,6 +60,15 @@ public class GroupSessionMemoryImpl implements GroupSession {
     }
 
     @Override
+    public List<Channel> getMembersChannel(String name, String sendName) {
+        return getMembers(name).stream()
+                .filter(member->!member.equals(sendName))
+                .map(member -> SessionFactory.getSession().getChannel(member))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Group getGroup(String name) {
         return groupMap.get(name);
     }

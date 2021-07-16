@@ -26,12 +26,12 @@ public class ChatServer {
         NioEventLoopGroup boss = new NioEventLoopGroup();
         NioEventLoopGroup worker = new NioEventLoopGroup();
         LoggingHandler LOGGING_HANDLER = new LoggingHandler(LogLevel.INFO);
-        LoginRequestMessage2Handler loginRequestMessage2Handler = new LoginRequestMessage2Handler();
         ChatRequestMessageHandler chatRequestMessageHandler = new ChatRequestMessageHandler();
-        GroupCreateRequestMessageHandler groupCreateRequest = new GroupCreateRequestMessageHandler();
-        MessageCodecSharable codec = new MessageCodecSharable();
         GroupJoinMessageHandler joinMessageHandler = new GroupJoinMessageHandler();
         JoinAccMsgHandler joinAccMsgHandler = new JoinAccMsgHandler();
+        LoginRequestMessage2Handler loginRequestMessage2Handler = new LoginRequestMessage2Handler();
+        GroupChatRequestMessageHandler groupChatRequestMessageHandler = new GroupChatRequestMessageHandler();
+        PingHandler pingHandler = new PingHandler();
         try {
             ServerBootstrap serverBootstrap = new ServerBootstrap();
             serverBootstrap.channel(NioServerSocketChannel.class);
@@ -43,24 +43,12 @@ public class ChatServer {
                     pipeline.addLast(new ProtocolFrameDecoder());
                     pipeline.addLast(LOGGING_HANDLER);
                     pipeline.addLast(new MessageCodecSharable());
-                    pipeline.addLast(new SimpleChannelInboundHandler<LoginRequestMessage>() {
-                        @Override
-                        protected void channelRead0(ChannelHandlerContext ctx, LoginRequestMessage msg) throws Exception {
-                            String username = msg.getUsername();
-                            String password = msg.getPassword();
-                            if (UserServiceFactory.getUserService().login(username, password)) {
-                                log.debug("msg: {}", msg);
-                                SessionFactory.getSession().bind(ctx.channel(), username);
-                                ctx.writeAndFlush(new LoginResponseMessage(true, "登录成功"));
-                            } else {
-                                ctx.writeAndFlush(new LoginResponseMessage(false, "登录失败"));
-                            }
-                        }
-                    });
+                    pipeline.addLast(loginRequestMessage2Handler);
                     pipeline.addLast(chatRequestMessageHandler);
-                   // pipeline.addLast(groupCreateRequest);
                     pipeline.addLast(joinMessageHandler);
                     pipeline.addLast(joinAccMsgHandler);
+                    pipeline.addLast(groupChatRequestMessageHandler);
+                    pipeline.addLast(pingHandler);
                 }
             });
             Channel channel = serverBootstrap.bind(8899).sync().channel();
